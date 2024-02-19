@@ -1,0 +1,197 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+const int N = 10;
+
+struct Date {
+    int day;
+    int month;
+    int year;
+};
+
+struct Book {
+    int id;
+    double price;
+    struct Date dateOfPublication;
+};
+
+struct Library {
+    Book books[10];
+    int numBooks;
+};
+
+void listOptions() {
+    cout << "~~~~~~~~~Welcome!~~~~~~~~~~"<< endl;
+    cout << "0: Exit" << endl;
+    cout << "1: Add" << endl;
+    cout << "2: Show" << endl;
+    cout << "3: Delete" << endl;
+    cout << "4: Sort" << endl;
+    cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+}
+
+void add(Library &library) {
+    if (library.numBooks < N) {
+        Book newBook;
+        cout << "Input Book ID: "<< endl;
+        cin >> newBook.id;
+        cout << "Input Price: "<< endl;
+        cin >> newBook.price;
+        cout << "Input Date (dd mm yyyy): "<< endl;
+        cin >> newBook.dateOfPublication.day >> newBook.dateOfPublication.month >> newBook.dateOfPublication.year;
+        cout << endl;
+        library.books[library.numBooks] = newBook;
+        library.numBooks++;
+    } else {
+        cout << "Library capacity reached. Cannot add more books." << endl;
+    }
+}
+
+void show(const Library &library) {
+    for (int i = 0; i < library.numBooks; i++) {
+        cout << "00" << library.books[i].id << "     " << fixed << setprecision(2)<< library.books[i].price
+             << "   " << library.books[i].dateOfPublication.day
+             << "-" << library.books[i].dateOfPublication.month
+             << "-" << library.books[i].dateOfPublication.year << endl;
+    }
+}
+
+void del(Library &library, int idToDelete) {
+    for (int i = 0; i < library.numBooks; i++) {
+        if (library.books[i].id == idToDelete) {
+            for (int j = i; j < library.numBooks - 1; j++) {
+                library.books[j] = library.books[j + 1];
+            }
+            library.numBooks--;
+            return;
+        }
+    }
+    cout << "The ID cannot be found" << endl;
+}
+
+void sort_id(Library &library) {
+    for (int i = 0; i < library.numBooks - 1; i++) {
+        for (int j = 0; j < library.numBooks - i - 1; j++) {
+            if (library.books[j].id > library.books[j + 1].id) {
+                Book temp = library.books[j];
+                library.books[j] = library.books[j + 1];
+                library.books[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void sort_date(Library &library) {
+    for (int i = 0; i < library.numBooks - 1; i++) {
+        for (int j = 0; j < library.numBooks - i - 1; j++) {
+            if (library.books[j].dateOfPublication.year > library.books[j + 1].dateOfPublication.year ||
+                (library.books[j].dateOfPublication.year == library.books[j + 1].dateOfPublication.year &&
+                 library.books[j].dateOfPublication.month > library.books[j + 1].dateOfPublication.month) ||
+                (library.books[j].dateOfPublication.year == library.books[j + 1].dateOfPublication.year &&
+                 library.books[j].dateOfPublication.month == library.books[j + 1].dateOfPublication.month &&
+                 library.books[j].dateOfPublication.day > library.books[j + 1].dateOfPublication.day) ||
+                 (library.books[j].dateOfPublication.year == library.books[j + 1].dateOfPublication.year &&
+                 library.books[j].dateOfPublication.month == library.books[j + 1].dateOfPublication.month &&
+                 library.books[j].dateOfPublication.day == library.books[j + 1].dateOfPublication.day &&
+                 library.books[j].id > library.books[j + 1].id)) {
+                
+                Book temp = library.books[j];
+                library.books[j] = library.books[j + 1];
+                library.books[j + 1] = temp;
+            }
+        }
+    }
+}
+
+
+void sort(Library &library) {
+    int n;
+    cout << "1: Sort by ID" << endl;
+    cout << "2: Sort by Date" << endl;
+    cin >> n;
+    if (n == 1) {
+        sort_id(library);
+    } else if (n == 2) {
+        sort_date(library);
+    }
+}
+
+void init(Library *p) {
+    p->books[p->numBooks].id = 3;
+    p->books[p->numBooks].price = 10.5;
+    p->books[p->numBooks].dateOfPublication.day = 15;
+    p->books[p->numBooks].dateOfPublication.month = 1;
+    p->books[p->numBooks].dateOfPublication.year = 1990;
+    (p->numBooks)++;
+
+    p->books[p->numBooks].id = 2;
+    p->books[p->numBooks].price = 20.55;
+    p->books[p->numBooks].dateOfPublication.day = 15;
+    p->books[p->numBooks].dateOfPublication.month = 2;
+    p->books[p->numBooks].dateOfPublication.year = 2024;
+    (p->numBooks)++;
+
+    p->books[p->numBooks].id = 4;
+    p->books[p->numBooks].price = 10.5;
+    p->books[p->numBooks].dateOfPublication.day = 20;
+    p->books[p->numBooks].dateOfPublication.month = 2;
+    p->books[p->numBooks].dateOfPublication.year = 2021;
+    (p->numBooks)++;
+
+    p->books[p->numBooks].id = 1;
+    p->books[p->numBooks].price = 30.1;
+    p->books[p->numBooks].dateOfPublication.day = 20;
+    p->books[p->numBooks].dateOfPublication.month = 2;
+    p->books[p->numBooks].dateOfPublication.year = 2021;
+    (p->numBooks)++;
+}
+
+
+int main() {
+    Library lib;
+    lib.numBooks = 0;
+
+    init(&lib);
+    int ans;
+    int opt;
+    while (1) {
+        listOptions();
+        cin >> opt;
+
+        switch (opt) {
+            case 1:
+                add(lib);
+                break;
+            case 2:
+                show(lib);
+                cout << endl;
+                break;
+            case 3:
+                int id;
+                cout << "Enter the ID to be deleted"<< endl;
+                cin >> id;
+                del(lib, id);
+                cout << endl;
+                break;
+            case 4:
+                cout << "1: Sort by ID" << endl;
+                cout << "2: Sort by Date" << endl;
+                cin >> ans;
+                cout << endl;
+                if (ans == 1){
+                    sort_id(lib);
+                    break;
+                }
+                if (ans == 2){
+                    sort_date(lib);;
+                    break;
+                }
+            case 0:
+                cout << "Bye!";
+                return 0;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    }
+}

@@ -1,0 +1,36 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main(){
+   string a[10];
+   int num[10];
+   cout << "Input the gas station data:" << endl;
+   for (int i = 0; i < 10; i++){
+       cin >> a[i];
+       cin >> num[i];
+   }
+
+   int min = 100;
+   for (int i = 0; i < 10; i++){
+       if(num[i] < min){
+               min = num[i];
+       }
+   }
+   cout << "The nearby gas stations map is:" << endl;
+   int p = 0;
+   for (int i = 0; i < 10; i++){
+       if(num[i] <= 5){
+           cout << a[i] << "(" << num[i] << ")";
+           if(num[i] == min){
+               cout << "*";
+           }
+           cout << " ";
+           p++;
+           if(p % 3 == 0){
+               cout << endl;
+           }
+       }
+   }
+   return 0;
+}

@@ -1,0 +1,71 @@
+#include <iostream>
+using namespace std;
+
+int main(){
+    int height;
+    cout << "Please input the height (integer):" << endl;
+    cin >> height;
+    cout << "Do you want to print M or W?:" << endl;
+    string str;
+    cin >> str;
+    if(str == "M"){
+        for(int i = 0; i < height; i++) {
+            for(int j = 0; j < height - i -1; j++) { 
+                cout << " ";
+            }
+            cout << "*";
+            
+            if(i != 0){
+                for(int j = 1; j < 2 * i; j++) {
+                    cout << " ";
+                }
+                cout << "*";
+            }
+            
+            if(i < height-1){
+                for(int j = 0; j < 2 * (height - i -1)-1; j++) {
+                    cout << " ";
+                }
+                cout << "*";
+            }
+            if(i != 0){
+                for(int j = 1; j < 2 * i; j++) {
+                    cout << " ";
+                }
+                cout << "*";
+            }
+            cout << endl;
+        }
+    }else if(str == "W"){
+        for(int i = height-1; i > -1; i--) {
+            for(int j = 0; j < height - i -1; j++) { 
+                cout << " ";
+            }
+            cout << "*";
+            
+            if(i != 0){
+                for(int j = 1; j < 2 * i; j++) {
+                    cout << " ";
+                }
+                cout << "*";
+            }
+            
+            if(i < height-1){
+                for(int j = 0; j < 2 * (height - i -1)-1; j++) {
+                    cout << " ";
+                }
+                cout << "*";
+            }
+            if(i != 0){
+                for(int j = 1; j < 2 * i; j++) {
+                    cout << " ";
+                }
+                cout << "*";
+            }
+            cout << endl;
+        }
+    }else{
+        cout << "Wrong input!" << endl;
+    }
+    return 0;
+}
