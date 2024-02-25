@@ -4,10 +4,11 @@ using namespace std;
 int main(){
     int height;
     cout << "Please input the height (integer):" << endl;
-    cin >> height;
+    cin >> height ;
     cout << "Do you want to print M or W?:" << endl;
     string str;
     cin >> str;
+    if(height > 1){
     if(str == "M"){
         for(int i = 0; i < height; i++) {
             for(int j = 0; j < height - i -1; j++) { 
@@ -66,6 +67,9 @@ int main(){
         }
     }else{
         cout << "Wrong input!" << endl;
+    }
+    }else{cout << "Wrong input!" << endl;
+    
     }
     return 0;
 }
