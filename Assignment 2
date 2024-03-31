@@ -1,0 +1,128 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <vector>
+using namespace std;
+
+string removeConsecutiveDuplicates(const string &input) {
+    istringstream iss(input);
+    string word;
+    string adjustedText;
+    string prevWord;
+    while (iss >> word) {
+        if (word != prevWord) {
+            adjustedText += word + " ";
+            prevWord = word;
+        }
+    }
+    return adjustedText;
+}
+
+string limitLineTo70Chars(const string &input) {
+    istringstream iss(input);
+    string word;
+    string limitedText;
+    int currentLength = 0;
+
+    while (iss >> word) {
+        if (currentLength + word.size() > 70) {
+            limitedText += "\n" + word + " ";
+            currentLength = word.size() + 1;
+        } else {
+            limitedText += word + " ";
+            currentLength += word.size() + 1;
+        }
+    }
+
+    return limitedText;
+}
+
+string alignText(const string &input) {
+    istringstream iss(input);
+    string word;
+    vector<string> lines;
+    stringstream currentLine;
+    const int maxWidth = 70;
+
+    while (iss >> word) {
+        if (word.find(".") != string::npos && word.find_first_of("0123456789") == 0) {
+            if (!currentLine.str().empty()) {
+                lines.push_back(currentLine.str());
+                currentLine.str(string()); 
+            }
+        }
+        if (currentLine.str().size() + word.size() > maxWidth) {
+            lines.push_back(currentLine.str());
+            currentLine.str(string());  
+        }
+        currentLine << word << " ";
+    }
+    lines.push_back(currentLine.str());  
+
+    
+    size_t maxLineLength = 0;
+    for (const auto &line : lines) {
+        if (line.size() > maxLineLength) {
+            maxLineLength = line.size();
+        }
+    }
+
+    
+    for (auto &line : lines) {
+        int spacesToAdd = maxWidth - line.size();
+        if (spacesToAdd > 0) {
+            size_t pos = 0;
+            while ((pos = line.find(" ", pos)) != string::npos) {
+                line.insert(pos, " ");
+                pos += 2 + (spacesToAdd / (lines.size() - 1));
+                spacesToAdd--;
+                if (spacesToAdd == 0) {
+                    break;
+                }
+            }
+        }
+    }
+
+    string alignedText;
+    for (const auto &line : lines) {
+        alignedText += line + "\n";
+    }
+
+    return alignedText;
+}
+
+int main() {
+    int fileNumber;
+    cout << "Please input file number (1-10): ";
+    cin >> fileNumber;
+
+    if (fileNumber < 1 || fileNumber > 10) {
+        cerr << "Invalid file number. Exiting program.";
+        return 1;
+    }
+
+    string inputFileName = "input" + to_string(fileNumber) + ".txt";
+    ifstream inputFile(inputFileName);
+
+    if (inputFile.is_open()) {
+        string line;
+        string adjustedText;
+        while (getline(inputFile, line)) {
+            
+            string cleanedLine = removeConsecutiveDuplicates(line);
+
+            string limitedLine = limitLineTo70Chars(cleanedLine);
+
+            string alignedLine = alignText(limitedLine);
+
+            adjustedText += alignedLine;
+        }
+        cout <<"\n"  << adjustedText ;
+        inputFile.close();
+    } else {
+        cerr << "Unable to open file: " << inputFileName << "\n";
+    }
+
+    return 0;
+}
